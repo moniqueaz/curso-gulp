@@ -7,6 +7,9 @@ var gulp = require('gulp'),
     usemin = require('gulp-usemin'),
     cssmin = require('gulp-cssmin'),
     browserSync = require('browser-sync');
+    jshint = require('gulp-jshint'),
+    jshintStylish = require('jshint-stylish'),
+    csslint = require('gulp-csslint');
 
     gulp.task('default', ['copy'], function(){
         gulp.start('build-img', 'usemin')
@@ -44,6 +47,18 @@ var gulp = require('gulp'),
                 baseDir: 'src' //raiz
                 //,proxy: "localhost:3000"
             }
+        });
+
+        gulp.watch('src/js/*.js').on('change', function(event){
+            gulp.src(event.path)
+                .pipe(jshint())
+                .pipe(jshint.reporter(jshintStylish));
+        });
+
+        gulp.watch('src/css/*.css').on('change', function(event){
+            gulp.src(event.path)
+                .pipe(csslint())
+                .pipe(csslint.reporter());
         });
 
         gulp.watch('src/**/*').on('change', browserSync.reload);
